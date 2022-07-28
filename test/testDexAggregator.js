@@ -1,5 +1,7 @@
 const { ethers } = require("hardhat");
 
+const IERC20_SOURCE = '@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20';
+
 require('chai')
     .use(require('chai-as-promised'))
     .should()
@@ -54,28 +56,43 @@ describe("Number Contract", function () {
     }
   });  
 
-  const interfaceERC20 = [
-    "function balanceOf(address) view returns (uint)",
-    "function transfer(address to, uint amount)",
-    "function approve(address spender, uint256 amount) public virtual override returns (bool)"
-];
+//   const interfaceERC20 = [
+//     "function balanceOf(address) view returns (uint)",
+//     "function transfer(address to, uint amount)",
+//     "function approve(address spender, uint256 amount) public virtual override returns (bool)"
+// ];
 
   it("Should make the swap", async function () {
     // TODO: this test should make a swap from usdc to weth or usdc to weth whatever is easier
-    const impersonatedAccountAddress = "0xCFFAd3200574698b78f32232aa9D63eABD290703"
+    const impersonatedAccountAddress = "0xCFFAd3200574698b78f32232aa9D63eABD290703"  //0xCFFAd3200574698b78f32232aa9D63eABD290703
 
     await hre.network.provider.request({
-      method: "hardhat_impersonateAccount",
+      method: 'hardhat_impersonateAccount',
       params: [impersonatedAccountAddress],
     });
-    const signer = await ethers.getSigner(impersonatedAccountAddress)
+    // const signer = await ethers.getSigner(impersonatedAccountAddress)
 
-    const provider = ethers.getDefaultProvider();
-    const usdcContract = new ethers.Contract(usdcContractAddress, interfaceERC20, provider);
+    const signer = await ethers.provider.getSigner(impersonatedAccountAddress);
+    signer.address = signer._address;
 
-    
-    await usdcContract.connect(signer).transfer(usdcContractAddress, "1");
-    await dexAggregatorContract.connect(signer).usdcToWeth("1");
+    // const provider = ethers.getDefaultProvider();
+    const usdcContract = await hre.ethers.getContractAt(IERC20_SOURCE ,usdcContractAddress, signer);
+    const wethContract = await hre.ethers.getContractAt(IERC20_SOURCE ,wethContractAddress, signer);
+
+    const usdcTokens = ethers.BigNumber.from(1).mul(6);
+
+    console.log("===================")
+    console.log("WETH Balance Before", await wethContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("USDC Balance Before", await usdcContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("===================")
+
+    await usdcContract.connect(signer).transfer(dexAggregatorContract.address, "1", {gasLimit: 300000});
+    await dexAggregatorContract.connect(signer).usdcToWeth("1", {gasLimit: 300000});
+
+    console.log("===================")
+    console.log("WETH Balance After", await wethContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("USDC Balance After", await usdcContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("===================")
 
   });
 });
