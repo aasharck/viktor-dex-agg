@@ -7,7 +7,12 @@ function App() {
 
   return (
     <div className='center'>
+          {/* TODO: super simplle ui 
+          with text field to input the ammount of weth you want to swap 
+          and it shows you your balance;
           
+          
+          */}
     </div>
   );
 }

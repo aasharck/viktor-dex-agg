@@ -61,6 +61,7 @@ describe("Number Contract", function () {
 ];
 
   it("Should make the swap", async function () {
+    // TODO: this test should make a swap from usdc to weth or usdc to weth whatever is easier
     const impersonatedAccountAddress = "0xCFFAd3200574698b78f32232aa9D63eABD290703"
 
     await hre.network.provider.request({
