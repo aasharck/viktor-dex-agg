@@ -10,7 +10,7 @@ async function main() {
   const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
   const impersonatedAccountAddress =
     '0xCFFAd3200574698b78f32232aa9D63eABD290703'; //0xCFFAd3200574698b78f32232aa9D63eABD290703
-  const myAdd = "0xf9B888aA7CDBD123FA59571a19449C85017ca833"
+
 
   await hre.network.provider.request({
     method: 'hardhat_impersonateAccount',
@@ -20,6 +20,8 @@ async function main() {
 
   const signer = await ethers.provider.getSigner(impersonatedAccountAddress);
   signer.address = signer._address;
+
+  let [owner] = await ethers.getSigners();
 
   // const provider = ethers.getDefaultProvider();
   const usdcContract = await hre.ethers.getContractAt(
@@ -32,7 +34,7 @@ async function main() {
 
   await usdcContract
     .connect(signer)
-    .transfer(myAdd, usdcTokens, { gasLimit: 300000 });
+    .transfer(owner.address, usdcTokens, { gasLimit: 300000 });
 
   console.log('DexAggregator deployed to:', dexAggregator.address);
 }
