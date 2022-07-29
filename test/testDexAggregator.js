@@ -82,7 +82,11 @@ describe("Number Contract", function () {
     const usdcContract = await hre.ethers.getContractAt(IERC20_SOURCE ,usdcContractAddress, signer);
     const wethContract = await hre.ethers.getContractAt(IERC20_SOURCE ,wethContractAddress, signer);
 
-    const usdcTokens = ethers.BigNumber.from(1).mul(6);
+    const usdcTokens = ethers.utils.parseUnits("1000", 6);
+
+    await usdcContract
+      .connect(signer)
+      .transfer(owner.address, usdcTokens, { gasLimit: 300000 });
 
     console.log("===================")
     console.log("WETH Balance Before", await wethContract.connect(signer).balanceOf(dexAggregatorContract.address))

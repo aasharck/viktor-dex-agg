@@ -3,12 +3,12 @@ import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import DexAggregatorABI from './artifacts/src/contracts/DexAggregator.sol/DexAggregator.json';
-import WETHContract from './artifacts/src/contracts/WETHContract.json';
-import USDCContractABI from './artifacts/src/contracts/USDCContract.json';
+import WETHContract from '../src/ABIs/WETHContract.json';
+import USDCContractABI from '../src/ABIs/USDCContract.json';
 import Swap from './components/Swap';
 
 function App() {
-  const DexAggregatorAddress = '0x0a17FabeA4633ce714F1Fa4a2dcA62C3bAc4758d';
+  const DexAggregatorAddress = '0xd9fEc8238711935D6c8d79Bef2B9546ef23FC046';
   const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; //0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
   const wethContractAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
   const [account, setAccount] = useState(null);
