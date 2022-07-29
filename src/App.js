@@ -1,26 +1,36 @@
 import './App.css';
-import { ethers } from 'hardhat';
+import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import DexAggregatorABI from './artifacts/src/contracts/DexAggregator.sol/DexAggregator.json'
-
+import DexAggregatorABI from './artifacts/src/contracts/DexAggregator.sol/DexAggregator.json';
+import WETHContract from './artifacts/src/contracts/WETHContract.json';
+import USDCContractABI from './artifacts/src/contracts/USDCContract.json';
+import Swap from './components/Swap';
 
 function App() {
-  const DexAggregatorAddress = "0xf342e904702b1d021f03f519d6d9614916b03f37"
+  const DexAggregatorAddress = '0x0a17FabeA4633ce714F1Fa4a2dcA62C3bAc4758d';
+  const usdcContractAddress = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; //0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+  const wethContractAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
   const [account, setAccount] = useState(null);
   const [contract, setContract] = useState('');
   const [loading, setLoading] = useState(false);
+  const [USDCContract, setUSDCContract] = useState('')
 
+  const [USDCBalance, setUSDCBalance] = useState(0);
+  const [WETHBalance, setWETHBalance] = useState(0);
+
+  const myAdd = '0xf9B888aA7CDBD123FA59571a19449C85017ca833';
 
   useEffect(() => {
     checkIfWalletIsConnected();
 
     window.ethereum.on('accountsChanged', async function (accounts) {
-      setAccount(accounts[0])
+      setAccount(accounts[0]);
       await checkIfWalletIsConnected();
       window.location.reload();
-    })
-  }, []);
+    });
+  },[]);
+
 
   //Check if wallet is Connected
   const checkIfWalletIsConnected = async () => {
@@ -63,11 +73,31 @@ function App() {
     }
   };
 
-  //Load the DexAggregator Contract
+  //Load the DexAggregator, USDC and WETH Contracts
   const loadContracts = async () => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
+
+      const usdcCont = new ethers.Contract(
+        usdcContractAddress,
+        USDCContractABI.abi,
+        signer
+      );
+
+      setUSDCContract(usdcCont);
+
+      let USDCBal = await usdcCont.balanceOf(myAdd);
+      setUSDCBalance(USDCBal.toString() / 10 ** 6);
+
+      const wethCont = new ethers.Contract(
+        wethContractAddress,
+        WETHContract.abi,
+        signer
+      );
+
+      let WETHBal = await wethCont.balanceOf(myAdd);
+      setWETHBalance(WETHBal.toString() / 10 ** 18);
 
       const dex = new ethers.Contract(
         DexAggregatorAddress,
@@ -92,7 +122,18 @@ function App() {
           
           
           */}
-      <Navbar account={account} connectWallet={connectWallet} loading={loading} />
+      <Navbar
+        account={account}
+        connectWallet={connectWallet}
+        loading={loading}
+      />
+      <Swap
+        account={account}
+        contract={contract}
+        USDCBalance={USDCBalance}
+        WETHBalance={WETHBalance}
+        USDCContract={USDCContract}
+      />
     </div>
   );
 }

@@ -3,9 +3,9 @@ import React from 'react';
 const Navbar = ({account, connectWallet, loading}) => {
   return (
     <div>
-      <nav className='navbar navbar-expand-lg navbar-expand-md navbar-dark' style={{backgroundColor: "black"}}>
+      <nav className='navbar navbar-expand-lg navbar-expand-md navbar-light'>
         <div className='container-fluid'>
-          <a className='navbar-brand' href='#'>
+          <a className='navbar-brand' href='/home'>
             DexAggregator
           </a>
           <button
@@ -20,12 +20,12 @@ const Navbar = ({account, connectWallet, loading}) => {
             <span className='navbar-toggler-icon'></span>
           </button>
           <div className='collapse navbar-collapse' id='navbarSupportedContent'>
-            {/* <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
+            <ul className='navbar-nav me-auto mb-2 mb-lg-0'>
               
-            </ul> */}
+            </ul>
            
             {account == null ? (
-        <button className='btn btn-light' onClick={connectWallet}>
+        <button className='btn btn-dark' onClick={connectWallet}>
           {loading ? (
             <span>
               <span
@@ -40,7 +40,7 @@ const Navbar = ({account, connectWallet, loading}) => {
           )}
         </button>
       ) : (
-        <button type="button" className="btn btn-outline-light" disabled>{account.slice(0, 7) + '....' + account.slice(34, 42)}</button>
+        <button type="button" className="btn btn-outline-dark" disabled>{account.slice(0, 7) + '....' + account.slice(34, 42)}</button>
       )}
           </div>
         </div>

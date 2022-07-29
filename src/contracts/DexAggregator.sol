@@ -70,7 +70,7 @@ contract DexAggregator {
     function usdcToWeth(uint256 usdcAmount) public {
         IERC20 token = IERC20(USDC);
 
-        token.transfer(address(this), usdcAmount);
+        token.transferFrom(msg.sender,address(this), usdcAmount);
 
         address[] memory path = new address[](2);
         path[0] = USDC;

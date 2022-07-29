@@ -11,10 +11,13 @@ const wethContractAddress = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";
 const usdcContractAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 
 describe("Number Contract", function () {
+  let owner;
+  let acc1;
 
   let dexAggregatorContract
 
   beforeEach(async () => {
+    [owner, acc1] = await ethers.getSigners();
     const DexAggregator = await ethers.getContractFactory("DexAggregator");
     dexAggregatorContract = await DexAggregator.deploy();
 
@@ -82,16 +85,18 @@ describe("Number Contract", function () {
     const usdcTokens = ethers.BigNumber.from(1).mul(6);
 
     console.log("===================")
-    console.log("WETH Balance Before", await wethContract.connect(signer).balanceOf(impersonatedAccountAddress))
-    console.log("USDC Balance Before", await usdcContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("WETH Balance Before", await wethContract.connect(signer).balanceOf(dexAggregatorContract.address))
+    console.log("Owner WETH Balance Before", await wethContract.connect(signer).balanceOf(owner.address))
+    console.log("Owner USDC Balance Before", await usdcContract.connect(signer).balanceOf(owner.address))
     console.log("===================")
 
-    await usdcContract.connect(signer).transfer(dexAggregatorContract.address, "1", {gasLimit: 300000});
-    await dexAggregatorContract.connect(signer).usdcToWeth("1", {gasLimit: 300000});
+    await usdcContract.connect(owner).approve(dexAggregatorContract.address, "1000", {gasLimit: 300000});
+    await dexAggregatorContract.usdcToWeth("100", {gasLimit: 300000});
 
     console.log("===================")
-    console.log("WETH Balance After", await wethContract.connect(signer).balanceOf(impersonatedAccountAddress))
-    console.log("USDC Balance After", await usdcContract.connect(signer).balanceOf(impersonatedAccountAddress))
+    console.log("WETH Balance After", await wethContract.connect(signer).balanceOf(dexAggregatorContract.address))
+    console.log("Owner WETH Balance After", await wethContract.connect(signer).balanceOf(owner.address))
+    console.log("Onwer USDC Balance After", await usdcContract.connect(signer).balanceOf(owner.address))
     console.log("===================")
 
   });

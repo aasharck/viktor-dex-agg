@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Aashar\\Solidity\\Viktor\\aashar-project\\src\\contracts\\DexAggregator.sol": {
-      "lastModificationDate": 1659021635168,
-      "contentHash": "be778b1312c2d7c370c2fc23ab07baaa",
+      "lastModificationDate": 1659073614272,
+      "contentHash": "b9b35827caba656565b06a382787141b",
       "sourceName": "src/contracts/DexAggregator.sol",
       "solcConfig": {
         "version": "0.8.4",
