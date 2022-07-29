@@ -76,8 +76,6 @@ function App() {
       );
       setContract(dex);
 
-      // console.log(await signer.provider.getCode(marketplace))
-
       console.log('Contracts Loaded!');
       setLoading(false);
     } catch (err) {
